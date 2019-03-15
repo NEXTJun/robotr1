@@ -2,6 +2,7 @@
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
 #include <WebSocketsServer.h>
+#include <FS.h>
 
 #define Serial_Speed      115200
 
@@ -29,45 +30,10 @@ ESP8266WebServer webServer(TCP_PORT);
 DNSServer dnsServer;
 WebSocketsServer webSocket = WebSocketsServer(Sockets_PORT);
 
-String page = "\
-  <html>\
-    <head>\
-      <script>\
-        var connection = new WebSocket('ws://'+location.hostname+':81/', ['arduino']);\
-        connection.onopen = function() {\
-          connection.send('Connect ' + new Date());\
-        };\
-        connection.onerror = function(error) {\
-          console.log('WebSocket Error ', error);\
-        };\
-        connection.onmessage = function(e) {\
-          console.log('Server: ', e.data);\
-        };\
-        function sendRGB() {\
-          var r = parseInt(document.getElementById('r').value).toString(16);\
-          var g = parseInt(document.getElementById('g').value).toString(16);\
-          var b = parseInt(document.getElementById('b').value).toString(16);\
-          if(r.length < 2) { r = '0' + r; }\
-          if(g.length < 2) { g = '0' + g; }\
-          if(b.length < 2) { b = '0' + b; }\
-          var rgb = '#'+r+g+b;\
-          console.log('RGB: ' + rgb);\
-          connection.send(rgb);\
-        }\
-      </script>\
-    </head>\
-    <body>\
-      LED Control:<br/><br/>\
-      R: <input id=\"r\" type=\"range\" min=\"0\" max=\"255\" step=\"1\" oninput=\"sendRGB();\" /><br/>\
-      G: <input id=\"g\" type=\"range\" min=\"0\" max=\"255\" step=\"1\" oninput=\"sendRGB();\" /><br/>\
-      B: <input id=\"b\" type=\"range\" min=\"0\" max=\"255\" step=\"1\" oninput=\"sendRGB();\" /><br/>\
-    </body>\
-  </html>\
-";
-
 void setup() {      
   ledConfig();
   serialConfig();
+  spiffsConfig();
   apConfig();
   dnsConfigBegin();
   socketConfigBegin();
@@ -99,6 +65,11 @@ void serialConfig() {
   Serial.begin(Serial_Speed);
 }
 
+void spiffsConfig() {
+  Serial.print("Setting SPIFFS configuration ... ");
+  Serial.println(SPIFFS.begin() ? "Ready" : "Failed!");  
+}
+
 void apConfig() {
   Serial.println();
 
@@ -120,8 +91,7 @@ void apConfig() {
 }
 
 void apHandle() {
-  webServer.on("/", handle_Root);
-  webServer.onNotFound(handle_NotFound);
+  webServer.onNotFound(webHandle);
 }
 
 void apBegin() {
@@ -137,7 +107,7 @@ void dnsConfigBegin() {
   dnsServer.setErrorReplyCode(DNSReplyCode::ServerFailure);  
   Serial.println("Ready");
     
-  Serial.print("Setting DNS Server configuration ... ");
+  Serial.print("Setting DNS Server start ... ");
   while (!dnsServer.start(DNS_PORT, dns_host, apIP)) {
     Serial.println("Failed!");
     Serial.print("Wait 1 second try again ...");
@@ -153,12 +123,24 @@ void socketConfigBegin() {
  Serial.println("Socket server started");
 }
 
-void handle_Root() {
-  webServer.send(200, "text/html", page);
+bool handleFileRead(String path){
+  if (path.endsWith("/")) {
+    path += "index.html";
+  } 
+  String contentType = getContentType(path);  
+  if (SPIFFS.exists(path)){
+    File file = SPIFFS.open(path, "r");
+    webServer.streamFile(file, contentType);
+    file.close(); 
+    return true;
+  }
+  return false;
 }
 
-void handle_NotFound() {
-  webServer.send(404, "text/plain", "Not found");
+void webHandle() {
+    if (!handleFileRead(webServer.uri())) {
+      webServer.send(404, "text/plain", "FileNotFound");
+    }
 }
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
@@ -167,10 +149,11 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
       Serial.printf("[%u] Disconnected!\n", num);
       break;
 
-    case WStype_CONNECTED:{
+    case WStype_CONNECTED: {
       IPAddress ip = webSocket.remoteIP(num);
       Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);      
-      webSocket.sendTXT(num, "Connected");}  // send message to client
+      webSocket.sendTXT(num, "Connected");
+      }  // send message to client
       break;
 
     case WStype_TEXT:
@@ -185,4 +168,21 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
       }
       break;
   }
+}
+
+String getContentType(String filename){
+  if(webServer.hasArg("download")) return "application/octet-stream";
+  else if(filename.endsWith(".htm")) return "text/html";
+  else if(filename.endsWith(".html")) return "text/html";
+  else if(filename.endsWith(".css")) return "text/css";
+  else if(filename.endsWith(".js")) return "application/javascript";
+  else if(filename.endsWith(".png")) return "image/png";
+  else if(filename.endsWith(".gif")) return "image/gif";
+  else if(filename.endsWith(".jpg")) return "image/jpeg";
+  else if(filename.endsWith(".ico")) return "image/x-icon";
+  else if(filename.endsWith(".xml")) return "text/xml";
+  else if(filename.endsWith(".pdf")) return "application/x-pdf";
+  else if(filename.endsWith(".zip")) return "application/x-zip";
+  else if(filename.endsWith(".gz")) return "application/x-gzip";
+  return "text/plain";
 }
