@@ -2,19 +2,24 @@
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
 #include <WebSocketsServer.h>
+#include <ArduinoJson.h>
 #include <FS.h>
 
 #define Serial_Speed      115200
 
-#define Project_SSID      "NEXTJun_Robot_R1"
+#define Project_SSID      "Robot_R1"
 #define Project_PASSWORD  "0916163689"
-#define Project_HOST      "www.nextjun_robot.com"
+#define Project_HOST      "www.robot.com"
 
 #define UsePassword_Flag  false
 
-# define LED_R D7
-# define LED_G D6
-# define LED_B D5
+# define LED_R 14
+# define LED_G 12
+# define LED_B 13
+
+# define LED_SIG 16
+
+#define jsonBufferSize 100
 
 const char* ssid = Project_SSID;
 const char* password = Project_PASSWORD;
@@ -24,11 +29,13 @@ const byte DNS_PORT = 53;
 const byte TCP_PORT = 80;
 const byte Sockets_PORT = 81;
 
-IPAddress apIP(192, 168, 100, 1);       // IP, gateway
+IPAddress apIP(192, 168, 0, 1);       // IP, gateway
 IPAddress apNetmask(255, 255, 255, 0);  // netmask
 ESP8266WebServer webServer(TCP_PORT);
 DNSServer dnsServer;
 WebSocketsServer webSocket = WebSocketsServer(Sockets_PORT);
+
+DynamicJsonDocument jsonBuffer(jsonBufferSize);
 
 void setup() {      
   ledConfig();
@@ -55,10 +62,12 @@ void ledConfig() {
   pinMode(LED_R, OUTPUT);
   pinMode(LED_G, OUTPUT);
   pinMode(LED_B, OUTPUT);
+  pinMode(LED_SIG, OUTPUT);
 
-  digitalWrite(LED_R, LOW);
-  digitalWrite(LED_G, LOW);
-  digitalWrite(LED_B, LOW);
+  digitalWrite(LED_R, HIGH);
+  digitalWrite(LED_G, HIGH);
+  digitalWrite(LED_B, HIGH);
+  digitalWrite(LED_SIG, LOW);
 }
 
 void serialConfig() {
@@ -127,8 +136,14 @@ bool handleFileRead(String path){
   if (path.endsWith("/")) {
     path += "index.html";
   } 
-  String contentType = getContentType(path);  
-  if (SPIFFS.exists(path)){
+  String contentType = getContentType(path);
+  String pathWithGz = path + ".gz";
+  
+  if (SPIFFS.exists(path) || SPIFFS.exists(pathWithGz)){
+    if(SPIFFS.exists(pathWithGz)) {
+      path += ".gz";
+    }
+    
     File file = SPIFFS.open(path, "r");
     webServer.streamFile(file, contentType);
     file.close(); 
@@ -152,22 +167,32 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
     case WStype_CONNECTED: {
       IPAddress ip = webSocket.remoteIP(num);
       Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);      
-      webSocket.sendTXT(num, "Connected");
+      webSocket.sendTXT(num, "esp8266 Connected");
       }  // send message to client
       break;
 
     case WStype_TEXT:
-      Serial.printf("[%u] get Text: %s\n", num, payload);
-      if(payload[0] == '#') {
-        // we get RGB data
-        // decode rgb data
-        uint32_t rgb = (uint32_t) strtol((const char *) &payload[1], NULL, 16);
-        analogWrite(LED_R, map(((rgb >> 16) & 0xFF), 0, 255, 0, 1023));
-        analogWrite(LED_G, map(((rgb >> 8) & 0xFF), 0, 255, 0, 1023));
-        analogWrite(LED_B, map(((rgb >> 0) & 0xFF), 0, 255, 0, 1023));
-      }
+      Serial.printf("[%u] get Text: %s\n", num, payload);      
+      handleSetting(payload);
       break;
   }
+}
+
+void handleSetting(uint8_t * payload){
+  DeserializationError error = deserializeJson(jsonBuffer, payload);
+  if (error) {
+    Serial.printf("analysis JSON failed!"); 
+  } else {  
+    int rgb_r = jsonBuffer["r"];
+    int rgb_g = jsonBuffer["g"];
+    int rgb_b = jsonBuffer["b"];
+    bool sig_led = jsonBuffer["signal_led"];
+  
+    analogWrite(LED_R, map(rgb_r, 0, 255, 1023, 0));
+    analogWrite(LED_G, map(rgb_g, 0, 255, 1023, 0));
+    analogWrite(LED_B, map(rgb_b, 0, 255, 1023, 0)); 
+    digitalWrite(LED_SIG, sig_led);
+  }  
 }
 
 String getContentType(String filename){
