@@ -67,6 +67,9 @@ void ledConfig() {
   digitalWrite(LED_R, HIGH);
   digitalWrite(LED_G, HIGH);
   digitalWrite(LED_B, HIGH);
+
+  digitalWrite(LED_SIG, HIGH);
+  delay(2000);
   digitalWrite(LED_SIG, LOW);
 }
 
