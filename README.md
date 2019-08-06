@@ -8,7 +8,7 @@
 
 整體花費上, 硬體材料費能壓到300以下, 但改造手工製作所耗時間甚多, 往後製作如非必要, 會分享以模組對接的專案為主。
 
-![mini-Q](https://github.com/NEXTJun/robotr1/blob/master/src_md/picture/mini-Q.jpg?raw=**true**)
+![mini-Q](https://github.com/NEXTJun/robotr1/blob/master/src_md/picture/mini-Q.jpg?raw=true)
 
 >圖片、模型來源 -
 >**泉源studio**   
@@ -33,6 +33,9 @@
 
 因化學處理危險且仍具有不平整的凹陷, 建議新手使用粗製銼刀或400號左右之砂紙做初部打磨。
 
+![素體](https://github.com/NEXTJun/robotr1/blob/master/src_md/picture/19574974_837766483040011_1601073209781201049_o.jpg?raw=true)
+圖片取至 泉源studio
+
 ### (2) 補土
 打磨是屬於減法加工的技巧, 如需更加平整, 尚需要用補土做加法加工, 去填補細微的凹槽以及打磨的痕跡。 建議使用500號底漆補土噴灌, 在每次打磨告一段落後噴漆, 再用更高號的砂紙打磨。
 
@@ -41,10 +44,16 @@
 ### (3) 打磨、補土 Loop
 所謂模型做到好, 打磨打到老。反覆進行(1)、(2)步驟, 並根據對完美的追求, 增加更細緻、更高號的砂紙與底漆補土做加工。總有一天材料費噴光或妥協後, 就算是初步完成基本的表面打底處理。
 
+![未上漆](https://github.com/NEXTJun/robotr1/blob/master/src_md/picture/line_1548343270453.jpg?raw=true)
+
 ### (4) 上漆
 模型根本性的大坑, 能選用的技巧有噴漆或筆塗, 如追求平整度和方便性, 建議使用噴漆做大面積處理。如對表面凹凸感的質地和部要求色澤均勻下, 可使用筆塗, 直接在模型上做畫。 
 
 此專案筆者採用的是筆塗技巧, 刻意去製造金屬髮絲紋和舊化感, 採用的漆料為壓克力戰旗漆。
+
+![筆塗上漆後](https://github.com/NEXTJun/robotr1/blob/master/src_md/picture/line_1551545618066.jpg?raw=true)
+
+![基本組裝](https://github.com/NEXTJun/robotr1/blob/master/src_md/picture/P_20190315_210858_vHDR_Auto.jpg?raw=true)
 
 ### (5) 保護漆
 最後當表面處理完成後, 畫龍點睛(或毀於一旦)的步驟便是噴塗保護漆。噴塗保護漆的優點有很多：防掉漆、刮傷、潑水、統一光澤等。 如希望外表能閃亮亮反光, 可選用亮光漆; 如希望低調穩重可選用消光漆; 小孩子才選擇兩個都要的(X), 不想光澤改變過大(O), 也有半消光漆的可選擇。
@@ -52,6 +61,8 @@
 基本模型觀念講解: 保護漆成分分為油性和水性, 須根據表面顏色漆種做選擇, 以避免腐蝕。消光漆原理為亮光漆加上白色微粒, 因此上完亮光漆可再噴上消光漆, 但上完消光漆再噴亮光漆則無作用。
 
 本專案採用郡士綠罐的水性消光保護漆，避免因溼度和操作關係會導致的白化現象。
+
+![噴完保護漆](https://github.com/NEXTJun/robotr1/blob/master/src_md/picture/P_20190415_234603_vHDR_Auto.jpg?raw=true)
 
 ---
 ## 4. 電路製作
