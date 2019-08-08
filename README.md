@@ -1,6 +1,8 @@
 # robotr1.github.io
 
+
 <iframe width="560" height="315" src="https://www.youtube.com/embed/Kwwezf4AD-o" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 
 >預覽網頁:      
 >https://nextjun.github.io/robotr1/data
@@ -176,7 +178,7 @@ ESP8266指的是IC名稱, 市面上可買到做好引腳的模組有ESP-01、ESP
 
     相關細節設定如下圖所示，特別要注意的是開發板可選擇NodeMCU 0.9, 因要執行步驟2的燒錄檔案, 須預留空間給資料存放用, 因此Flash Size選擇4M(1M SPIFFS)。
 
-![Upload Setting](https://github.com/NEXTJun/robotr1/blob/master/src_md/upload_setting.png?raw=true)
+![Upload Setting](https://github.com/NEXTJun/robotr1/blob/master/src_md/picture/upload_setting.png?raw=true)
 
 2. 執行「工具→ESP8266 Sketch Data Upload」, 該程序會將ino檔同目錄的data資料夾上傳至ESP8266 flash內, 並可在程式內以路徑方式調用該資源。 本專案data資料夾所存放之檔案為網頁相關檔案, 如需更改請自行學習前端開發相關知識。
 
@@ -186,4 +188,4 @@ ESP8266指的是IC名稱, 市面上可買到做好引腳的模組有ESP-01、ESP
 
 完成硬體製作和程式燒錄後, 即可接上USB 5V供電確認專案完成, 先假定並未更改自訂設定, 上電後ESP8266會建立SSID為 "Robot_R1" 的Wifi, 以筆電或手機連線至該Wifi, 預設密碼為 "12345678", 並使用瀏覽器進入 "www.robot.com"或 "192.168.0.1"即可進入專案網頁, 便可透過網頁遠端控制專案硬體。
 
-![Final Project](https://github.com/NEXTJun/robotr1/blob/master/src_md/IMG_0767.jpg?raw=true)
+![Final Project](https://github.com/NEXTJun/robotr1/blob/master/src_md/picture/IMG_0767.jpg?raw=true)
