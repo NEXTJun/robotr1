@@ -1,8 +1,9 @@
 # robotr1.github.io
 
-[![圖片 ALT 文字放在這裡](http://img.youtube.com/vi/Kwwezf4AD-o/0.jpg)](http://www.youtube.com/watch?v=Kwwezf4AD-o)
+[![YouTube影片](http://img.youtube.com/vi/Kwwezf4AD-o/0.jpg)](http://www.youtube.com/watch?v=Kwwezf4AD-o)
 
 影片連結: https://youtu.be/Kwwezf4AD-o
+
 
 >預覽網頁:      
 >https://nextjun.github.io/robotr1/data
