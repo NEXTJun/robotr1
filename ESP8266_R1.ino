@@ -8,7 +8,7 @@
 #define Serial_Speed      115200
 
 #define Project_SSID      "Robot_R1"
-#define Project_PASSWORD  "0916163689"
+#define Project_PASSWORD  "12345678"
 #define Project_HOST      "www.robot.com"
 
 #define UsePassword_Flag  false
