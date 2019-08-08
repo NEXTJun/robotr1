@@ -187,6 +187,6 @@ ESP8266指的是IC名稱, 市面上可買到做好引腳的模組有ESP-01、ESP
 
 ## 6. 上電展示
 
-完成硬體製作和程式燒錄後, 即可接上USB 5V供電確認專案完成, 先假定並未更改自訂設定, 上電後ESP8266會建立SSID為 "Robot_R1" 的Wifi, 以筆電或手機連線至該Wifi, 預設密碼為 "12345678", 並使用瀏覽器進入 "www.robot.com"或 "192.168.0.1"即可進入專案網頁, 便可透過網頁遠端控制專案硬體。
+完成硬體製作和程式燒錄後, 即可接上USB 5V供電確認專案完成, 先假定並未更改自訂設定, 上電後ESP8266會建立SSID為 "Robot_R1" 的Wifi, 以筆電或手機連線至該Wifi, 預設密碼為 "12345678", 並使用瀏覽器進入 " www.robot.com " 或 " 192.168.0.1 "即可進入專案網頁, 便可透過網頁遠端控制專案硬體。
 
 ![Final Project](https://github.com/NEXTJun/robotr1/blob/master/src_md/picture/IMG_0767.jpg?raw=true)
